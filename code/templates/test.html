@@ -1,0 +1,10 @@
+'<div class="rows">
+    <button class="summary" onclick="openPage(\'summary\')">Summary</button>
+    <button class="horBarChart" onclick="openPage(\'horBarChart\')">Mean Data Chart</button>
+    <button class="pixelLineChart" onclick="openPage(\'pixelLineChart\')">Hour Data Chart</button>
+    <button class="warning" onclick="openPage(\'warning\')">Warning</button>
+</div>
+    <div id="summary" class="page">' + '<h4>Summary</h4>' + (props ? '<b>' + props.NUTS_NAME + '</b><br />' + concentration + '</b>' + unitStr  : 'The query results will be displayed here') + '</div>
+    <div id="horBarChart" class="page"  style="display:none"></div>
+    <div id="pixelLineChart" class="page" style="display:none"></div>
+    <div id="warning" class="page" style="display:none">'+ (healthIndex ? healthIndex : '') + '</div>'

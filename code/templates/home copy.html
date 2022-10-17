@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS for CAMS</title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"> -->
+    <link rel="stylesheet" href="../static/dist/bootstrap/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="../static/dist/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../static/dist/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="../static/css/leaflet.legend.css" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <div id="lmask" class="lmask col-md-12 col-lg-12 col-xs-12">
+        <img src="../static/images/loading1.gif">
+    </div>
+
+
+    <!-- <div class="d-flex align-items-center p-0 my-2 text-white bg-blue rounded shadow-sm">  -->
+    <div
+        class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom bg-blue col-md-12 col-lg-12 col-xs-12">
+        <a href="https://github.com/Yunshasha/GISMaster"
+            class="d-flex align-items-center text-dark text-decoration-none">
+            <svg height="45" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="45" data-view-component="true"
+                class="octicon octicon-mark-github v-align-middle">
+                <path fill-rule="evenodd"
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+            </svg>
+            <span class="fs-4 text-white"><sub></sub></span>
+        </a>&nbsp;&nbsp;&nbsp;
+        <a href="https://ads.atmosphere.copernicus.eu/cdsapp#!/dataset/cams-europe-air-quality-forecasts?tab=overview"
+            class="d-flex align-items-center text-dark text-decoration-none">
+            <span class="fs-4 text-white">CAMS European Air Quality</span>
+        </a>&nbsp;&nbsp;&nbsp;
+
+        <a href="https://www.polimi.it/" class="d-flex align-items-center text-dark text-decoration-none">
+            <img class="me-3 my-3" src="../static/images/logoPolimi.png" alt="" style="height:60px">
+        </a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <!-- <div class="float-left"> -->
+        <a class="cds-site-logo" href="https://ec.europa.eu/growth/">
+            <img alt="EC_logo" data-entity-type="file" data-entity-uuid="96f68f9d-fd45-4317-89a9-032362759432"
+                src="../static/images/logo-european-commission_0.png" style="height:80px;margin-right: -10px;">
+        </a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="cds-site-logo" href="http://www.copernicus.eu/">
+            <img alt="Copernicus (logo). Europe's eyes on Earth." src="../static/images/copernicus-logo.png"
+                style="height:50px">
+        </a>&nbsp; &nbsp; &nbsp;
+        <a class="cds-site-logo" href="http://www.ecmwf.int/">
+            <img alt="ecmwf_logo" data-entity-type="file" data-entity-uuid="93020f78-ee26-49f2-acee-b16b623e9f4f"
+                src="../static/images/logo-ecmwf.png" style="height:40px">
+        </a>&nbsp; &nbsp; &nbsp;&nbsp;
+        <a class="cds-site-logo" href="https://atmosphere.copernicus.eu">
+            <img alt="cams_logo" data-entity-type="file" data-entity-uuid="6c69e0c2-b5e1-4574-8c89-9b53478c1588"
+                src="../static/images/logo.svg" style="height:50px" title="https://atmosphere.copernicus.eu">
+        </a>&nbsp; &nbsp; &nbsp;
+        <a class="cds-site-logo"
+            href="https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health">
+            <img sf-custom-thumbnail="true" src="../static/images/h-logo-white.svg" sf-size="16220" width="200"
+                alt="World Health Organization" sf-constrain-proportions="true">
+        </a>
+        <!-- </div> -->
+
+
+
+    </div>
+
+
+    <div class="row p-4 pb-0 pe-lg-0 pt-lg-1 align-items-top rounded-3 border shadow-lg col-md-12 col-lg-12 col-xs-12">
+
+        <div class="col-md-2 col-lg-2 col-xs-2" style="background-color:#F5F5F5;">
+            <table id="requestTable" class="requestTable">
+
+                <tr id="titleTD">
+                    <td>
+                        Municipality:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- <select id="province" name="province">
+                            <option value="ITC46">Bergamo</option>
+                            <option value="ITI15">Prato</option>
+                            <option value="ITC42">Como</option>
+                            <option value="ITC43">Lecco</option>
+                            <option value="ITC4C">Milano</option>
+                        </select> -->
+
+                        <!-- <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">                            
+                            <input type="search" class="form-control" id="searchBar" name="searchBar" placeholder="Search..." aria-label="Search" >                            
+                        </form> -->
+
+                        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input list="nutsNameList" size=10 autocomplete="off" type="search"
+                                            class="form-control" id="province" name="province" placeholder="Search..."
+                                            aria-label="Search" value="">
+                                        <datalist id="nutsNameList" name="nutsNameList"
+                                            style="width:100px;overflow-y:auto;" size=10>
+
+                                        </datalist>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
+
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td id="titleTD">
+                        <hr class="bg-danger border-2 border-top border-info">
+                        Pollutant:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- <div>
+                        <div class="form-check">
+                            <input id="carbon_monoxide" name="carbon_monoxide" type="radio" class="form-check-input" required="">
+                            <label class="form-check-label" for="carbon_monoxide">carbon_monoxide</label>
+                        </div>                        
+                        </div> -->
+
+                        <fieldset>
+                            <!-- <legend>Select one pollutant:</legend> -->
+                            <div>
+                                <input type="radio" id="carbon_monoxide" name="pollutant" value="carbon_monoxide">
+                                <label for="carbon_monoxide">CO</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="ozone" name="pollutant" value="ozone">
+                                <label for="ozone">O<sub>3</sub></label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="sulphur_dioxide" name="pollutant" value="sulphur_dioxide">
+                                <label for="sulphur_dioxide">SO<sub>2</sub></label>
+                            </div>
+
+
+
+                            <div>
+                                <input type="radio" id="nitrogen_dioxide" name="pollutant" value="nitrogen_dioxide">
+                                <label for="nitrogen_dioxide">NO<sub>2</sub></label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="particulate_matter_10um" name="pollutant"
+                                    value="particulate_matter_10um">
+                                <label for="particulate_matter_10um">PM<sub>10</sub></label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="particulate_matter_2.5um" name="pollutant"
+                                    value="particulate_matter_2.5um">
+                                <label for="particulate_matter_2.5um">PM<sub>2.5</sub></label>
+                            </div>
+
+                        </fieldset>
+                    </td>
+                </tr>
+
+
+                <tr id="titleTD">
+                    <td>
+                        <hr class="bg-danger border-2 border-top border-info">
+                        Time Scale:
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <fieldset>
+                            <!-- <legend>Select one pollutant:</legend> -->
+
+                            <div>
+                                <input type="radio" id="timeScaleDay" name="timeScale" class="timeScale"
+                                    value="timeScaleDay">
+                                <label for="timeScaleDay">Day</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="timeScaleYear" name="timeScale" class="timeScale"
+                                    value="timeScaleYear">
+                                <label for="timeScaleYear">Year</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="timeScaleHour" name="timeScale" class="timeScale"
+                                    value="timeScaleHour">
+                                <label for="timeScaleHour">8 hour</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="timeScalePeakSeason" name="timeScale" class="timeScale"
+                                    value="timeScalePeakSeason">
+                                <label for="timeScalePeakSeason">Peak Season</label>
+                            </div>
+
+                        </fieldset>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td id="titleTD">
+                        <hr class="bg-danger border-2 border-top border-info">
+                        Year:
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <fieldset>
+                            <!-- <legend>Select one pollutant:</legend> -->
+                            <!-- <div>
+                                <input type="radio" id="2019" name="timeYear" class="timeYear" value="2019">
+                                <label for="2019">2019</label>
+                            </div> -->
+
+                            <div>
+                                <input type="radio" id="2020" name="timeYear" class="timeYear" value="2020">
+                                <label for="2020">2020</label>
+                            </div>
+
+                            <div>
+                                <input type="radio" id="2021" name="timeYear" class="timeYear" value="2021">
+                                <label for="2021">2021</label>
+                            </div>
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td id="titleTD">
+                        <hr class="bg-danger border-2 border-top border-info">
+                        Date:
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><input id="sdate" name="sdate" class="form-control" type="date" value="2022-01-01" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr class="bg-danger border-2 border-top border-info">
+                        <button id="submit1" name="submit1" class="btn btn-primary" type="button">Request</button>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="col-md-10 col-lg-10 col-xs-10">
+
+            <div id="map" style="height: 800px;"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/dist/leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="../static/js/leaflet.legend.js"></script>
+    <script type="text/javascript" src="../static/js/papaparse.min.js"></script>
+    <script type="text/javascript" src="../static/js/lombardia.js"></script>
+    <script type="text/javascript" src="../static/js/home.js"></script>
+    <script type="text/javascript" src="../static/dist/hightcharts/highcharts.js"></script>
+    <script type="text/javascript" src="../static/dist/hightcharts/series-label.js"></script>
+    <script type="text/javascript" src="../static/dist/hightcharts/exporting.js"></script>
+    <script type="text/javascript" src="../static/dist/hightcharts/accessibility.js"></script>
+
+
+
+    <script>
+        var map;
+        var layerControl;
+        var concentrationCircle;
+        var europaProvinceLayer;
+        var popLayer;
+        var mean_data_list;
+        var pollutantChecked;
+        var allConcentration;
+        var allConcentration2;
+        var legend;
+
+        var unitStr; // 参数        
+        var threshold; // 参数
+        var AQG_type; //参数
+        var x_label_text; //参数
+        var chartThreshold; //参数
+        var count; // 参数
+
+        var timeScaleChecked;
+        var info;
+        var nustId;
+        var meaneachtimedata;
+        var currentQueryedFeatureId;
+
+        // firstly load
+        $(function () {
+            // when load home page execute script            
+            $(document).ready(function () {
+
+                // set default pollutant, use this as a default load pollutant
+                var pollutantObj = document.getElementsByName("pollutant");
+                for (var i = 0; i < pollutantObj.length; i++) { //遍历Radio 
+                    if (pollutantObj[i].value == 'carbon_monoxide') {
+                        $('#carbon_monoxide').attr("checked", "checked");
+                    }
+                }
+
+                checkSelectedPollutant();
+
+
+                $('input[type=radio][name=pollutant]').change(function () {
+                    checkSelectedPollutant();
+                });
+
+                $('input[type=radio][name=timeScale]').change(function () {
+                    checkSelectTimeScale();
+                });
+
+
+                // load basemap
+                loadMap();
+                // pixelLineChartLegend();
+                // displayProvinceChart()
+                // testInfo3();
+
+
+                // default request pollutant concentration data
+                // requestConcentrationData();  //取消注释: 表明 打开网站 就默认 请求数据 ***取消此行的时候 请手动 注释下一行
+                $('#lmask').hide();
+
+                // load all the province nuts
+                loadNutsNameList();
+
+                // change function
+                $('input[type=search][name=province]').change(function () {
+                    europaProvinceLayer.resetStyle();
+                    // remove the previous legend
+                    if (legend) {
+                        map.removeControl(legend);
+                        // method that we will use to update the control based on feature properties passed
+                        info.update();
+                    }
+
+                    var el = $("#province")[0];  //used [0] is to get HTML DOM not jquery Object
+                    var dl = $("#nutsNameList")[0];
+                    if (el.value.trim() != '') {
+                        var opSelected = dl.querySelector(`[value="${el.value}"]`);
+                        try { nustId = opSelected.getAttribute('id'); }
+                        catch {
+                            alert('The query municipality is not in this map, please change your selection!');
+                            document.getElementById('province').value = "";
+                            return;
+                        }
+                        if (nustId != '') {
+                            for (var f in europaProvinceLayer._layers) {
+                                var fs = europaProvinceLayer._layers[f];
+                                if (fs.feature.properties.PRO_COM == nustId) {
+                                    fs.setStyle({
+                                        fillColor: "#f2ff00",
+                                        weight: 0.8,
+                                        opacity: 0.8,
+                                        color: "#3388ff",
+                                        fillOpacity: 0.5,
+                                    });
+                                    var coord;
+                                    var length2;
+                                    if (fs.feature.geometry.type == 'Polygon') {
+                                        length2 = fs.feature.geometry.coordinates[0].length;
+                                        coord = fs.feature.geometry.coordinates[0][parseInt(length2 / 2)];
+
+                                    } else {//MultiPolygon
+                                        length2 = fs.feature.geometry.coordinates[0][0].length;
+                                        coord = fs.feature.geometry.coordinates[0][0][parseInt(length2 / 2)];
+                                    }
+                                    latlngs = L.GeoJSON.coordsToLatLng(coord);
+                                    map.flyTo(latlngs, 10, {
+                                        animate: true,
+                                        duration: 1.5
+                                    });
+                                    // map.fitBounds(fs.getBounds());                
+                                    return;
+                                }
+                            }
+
+
+                        }
+                    } else {
+                        // europaProvinceLayer.resetStyle();
+                        // map.setView([45.450859, 9.206543], 5,{animate:true, duration:1.5});
+                        map.flyTo([45.450859, 10.06543], 8, {
+                            animate: true,
+                            duration: 1.5
+                        });
+                    }
+
+
+                });
+
+
+
+            })
+
+            // 查询 某个pollutants 在 某个时间段内的 concentration
+            $('#submit1').on('click', function () {
+                var el = $("#province")[0];  //used [0] is to get HTML DOM not jquery Object
+                var dl = $("#nutsNameList")[0];
+                if (el.value.trim() != '') {
+                    var opSelected = dl.querySelector(`[value="${el.value}"]`);
+                    try {
+                        nustId = opSelected.getAttribute('id');
+                    } catch {
+                        alert('The query municipality is not in this map, please change your selection!');
+                        document.getElementById('province').value = "";
+                        return;
+                    }
+                    if (nustId != '') {
+                        requestConcentrationData();
+                    } else {
+                        alert('The query municipality is not in this map, please change your selection!');
+                    }
+                } else {
+                    alert('Please select one municipality firstly!');
+                }
+
+
+
+            })//click
+
+
+        });//function
+
+
+        // load all the provinces' nuts name to searchBar
+        function loadNutsNameList() {
+            var features = europaProvince.features;
+            // console.log(features.length);
+            var strNutsNameOption = '';
+            for (var i = 0; i < features.length; i++) {
+                // console.log(features[i].properties.NUTS_NAME);             
+                // var opt = '<option id=\"' + i + '\"' + ' value=\"' + features[i].properties.NUTS_ID + '\">' + features[i].properties.NUTS_NAME + '</option>';
+                var opt = '<option id=\"' + features[i].properties.PRO_COM + '\"' + ' value=\"' + features[i].properties.COMUNE + '\">' + '</option>';
+                strNutsNameOption += opt;
+            }
+            $('#nutsNameList').html(strNutsNameOption);
+        }
+
+        // request concentration data
+        function requestConcentrationData() {
+            // open the mask 
+            $('#lmask').show();
+
+            // get the selected pollutant
+            var obj = document.getElementsByName("pollutant");
+            for (var i = 0; i < obj.length; i++) { //遍历Radio 
+                if (obj[i].checked) {
+                    pollutantChecked = obj[i].value;
+                }
+            }
+
+            // remove the previous legend
+            if (legend) {
+                map.removeControl(legend);
+            }
+
+            // determine day or year data the user requests
+            if ($('#sdate').val() == '') {
+                var valCheckedTimeScale = $('input:radio[name="timeScale"]:checked').val();
+
+                if (valCheckedTimeScale == 'timeScaleYear' || valCheckedTimeScale == 'timeScalePeakSeason') {
+                    // alert('Annual data is currently unavailable, please select day data.');
+                    // $('#lmask').hide();
+                    // return
+
+                    /************************接下来是年数据 有待完成******************/
+                    var valCheckedTimeYear = $('input:radio[name="timeYear"]:checked').val();
+                    if (valCheckedTimeYear) {
+                        // alert(valCheckedTimeYear);
+                        // 接下来写年处理的数据 通过ajax
+                        $.ajax({
+                            type: 'GET',
+                            url: "http://127.0.0.1:5000/getYearData",
+                            dataType: 'json',
+                            data: {
+                                'syear': valCheckedTimeYear,//'2020'
+                                'pollutants': pollutantChecked,
+                                'province': nustId
+                            },// 这次请求要携带给后端的数据
+                            success: function (res) {
+                                const data = res;
+                                var objString = JSON.stringify(data);
+                                var objJson = JSON.parse(objString);
+
+                                // console.log(objJson);
+
+                                concentration = objJson.meandata;
+
+                                unitStr = objJson.unitStr;
+                                threshold = objJson.threshold;
+                                chartThreshold = objJson.chartThreshold;
+                                AQG_type = objJson.AQG_type;
+                                x_label_text = objJson.x_label_text;
+                                count = objJson.count;
+
+                                zoomCenter = objJson.zoomCenter;
+                                meaneachtimedata = objJson.meaneachtimedata;
+
+                                addLegend();
+
+                                // 清除已经存在的feature style
+                                europaProvinceLayer.resetStyle();
+
+                                setFeatureStyle(europaProvinceLayer, concentration, valCheckedTimeYear);
+
+                                // zoom to the selected province
+                                map.setView(zoomCenter, 12);
+
+                                // alert('加载完成 隐藏mask');
+                                $('#lmask').hide();
+
+                                displayProvinceChart();
+
+                                currentQueryedFeatureId = nustId;
+
+                            },//success
+                            error: function (xhr, state, errorThrown) {
+                                alert('Sorry, the requested pollutant has no data in the selected year. Contact with administrator, please!');
+                                $('#lmask').hide();
+                                return;
+                            }
+
+                        })//ajax
+
+
+                    }
+                    else {
+                        alert('Please select a specific year!');
+                        $('#lmask').hide();
+                        return;
+                    }
+
+                } else {
+                    alert('Please select a specific day');
+                    $('#lmask').hide();
+                    return;
+                }
+
+            } else {//查询天数据
+                valCheckedTimeDay = $('#sdate').val();
+                let currentDate = new Date().toJSON().slice(0, 10);
+
+                if (valCheckedTimeDay > currentDate) {
+                    alert('There is no data for the selected time!');
+                    $('#sdate').prop('value', '');
+                    $('#lmask').hide();
+                    return;
+                }
+
+                // request the concentration data for day
+                $.ajax({
+                    type: 'GET',
+                    url: "http://127.0.0.1:5000/getDayData",
+                    dataType: 'json',
+                    data: {
+                        'sdate': valCheckedTimeDay,//'2020-01-01'
+                        'pollutants': pollutantChecked,
+                        'province': nustId
+                    },// 这次请求要携带给后端的数据
+                    success: function (res) {
+                        //alert('success')
+                        const data = res;
+                        var objString = JSON.stringify(data);
+                        var objJson = JSON.parse(objString);
+                        concentration = objJson.meandata;
+
+                        unitStr = objJson.unitStr;
+                        threshold = objJson.threshold;
+                        chartThreshold = objJson.chartThreshold;
+                        AQG_type = objJson.AQG_type;
+                        x_label_text = objJson.x_label_text;
+                        count = 'For statistical years only';
+
+                        zoomCenter = objJson.zoomCenter;
+                        meaneachtimedata = objJson.meaneachtimedata;
+
+                        addLegend();
+
+                        // 清除已经存在的feature style
+                        europaProvinceLayer.resetStyle();
+
+                        setFeatureStyle(europaProvinceLayer, concentration, valCheckedTimeDay);
+
+                        // zoom to the selected province
+                        map.setView(zoomCenter, 12);
+
+                        // alert('加载完成 隐藏mask');
+                        $('#lmask').hide();
+
+                        displayProvinceChart();
+                        currentQueryedFeatureId = nustId;
+
+
+                    },//success
+                    error: function () {
+                        alert('Sorry, the requested pollutant has no data in the selected date. Contact with administrator, please!');
+                        $('#lmask').hide();
+                        return;
+                    }
+                })//ajax
+
+            }
+
+        }
+
+        // load the map using leaflet        
+        function loadMap() {
+            //定义地图容器
+            map = L.map('map', {
+                center: [45.450859, 10.06543],
+                zoom: 8,
+                zoomControl: false,
+                attributionControl: false,
+                scrollWheelZoom: true,
+                doubleClickZoom: false,
+            });
+            map.on('contextmenu',function(e){
+                alert(e.latlng);
+            });
+
+            //设置底图
+            var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '@ OpenStreetMap'
+            }).addTo(map);
+
+            var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+            var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+            var streets = L.tileLayer(mbUrl, {
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                attribution: mbAttr
+            });
+            var satellite = L.tileLayer(mbUrl, {
+                id: 'mapbox/satellite-v9',
+                tileSize: 512,
+                zoomOffset: -1,
+                attribution: mbAttr
+            });
+
+            //添加欧洲矢量地图 按province分
+            europaProvinceLayer = L.geoJson(europaProvince, {
+                style: {
+                    weight: 0.5,
+                    opacity: 1,
+                    color: 'blue',
+                    // dashArray: '1',
+                    fill: true,
+                    fillColor: '',//getColor(feature.properties.density),
+                    fillOpacity: 0,
+                },
+                // A Function that will be called once for each
+                // created Feature, after it has been created and styled
+                onEachFeature: function (feature, layer) {
+                    // layer.on("mouseover", function (e) {
+                    //     // bindPopup
+                    //     var nuts_id = feature.properties.NUTS_ID
+                    //     popLayer = layer.bindPopup("Province: " + feature.properties.NUTS_NAME + "<br>");//  + "Pollutant: " + pollutantChecked + "<br>" + "Value: " + concentration + unitStr);                        
+                    //     popLayer.openPopup(e.latlng);
+                    //     // document.getElementById("province").value = feature.properties.NUTS_NAME;
+                    // });
+                    layer.on("mouseout", function () {
+                        if (popLayer) {
+                            popLayer.closePopup();
+                        }
+                    });
+                    layer.on('click', function (e) {
+                        if (currentQueryedFeatureId == feature.properties.PRO_COM) {
+                            $.ajax({
+                                type: 'GET',
+                                url: "http://127.0.0.1:5000/queryByPixel",
+                                dataType: 'json',
+                                data: {
+                                    'lat_pixel': e.latlng.lat,
+                                    'lon_pixel': e.latlng.lng
+                                },// 这次请求要携带给后端的数据
+                                success: function (res) {
+                                    const data = res;
+                                    var objString = JSON.stringify(data);
+                                    var objJson = JSON.parse(objString);
+                                    // xdata = objJson.xdata;
+                                    var ydata = objJson.ydata;
+
+                                    if ($('input:radio[name="timeYear"]:checked').val()) {
+                                        // var hour_array = Array(ydata.length).fill(1).map((v, k) => k);                                        
+                                        // var xdata = hour_array.map(function(item) { return Math.ceil(item) } )
+                                        var xdata = Array(ydata.length).fill(1).map((v, k) => k + 1);   //年是从第1天开始的     
+                                    } else {
+                                        var xdata = Array(ydata.length).fill(1).map((v, k) => k);  //天是从第0点开始的
+                                    }
+
+                                    // var xdata = Array(ydata.length).fill(1).map((v, k) => k);
+                                    // var tsdata = new Array(ydata.length).fill(threshold);
+                                    var ts_array = new Array(meaneachtimedata.length).fill(chartThreshold);
+
+                                    var myChart2 = Highcharts.chart('pixelLineChart', {
+                                        chart: {
+                                            type: 'line',
+                                            height: 500,
+                                            width: 500
+                                        },
+                                        title: {
+                                            text: 'Pixel: Concentration time series',
+                                            display: false,
+                                        },
+                                        xAxis: {
+                                            categories: xdata,
+                                            title: {
+                                                text: x_label_text
+                                            }
+                                        },
+                                        yAxis: {
+                                            title: {
+                                                text: 'Concentration (' + unitStr + ')'
+                                            }
+                                        },
+                                        legend: {
+                                            layout: 'horizontal',
+                                            align: 'left',
+                                            verticalAlign: 'top'
+                                        },
+                                        plotOptions: {
+                                            line: {
+                                                dataLabels: {
+                                                    // 开启数据标签
+                                                    enabled: false
+                                                },
+                                                // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+                                                enableMouseTracking: true
+                                            },
+                                            series: {
+                                                label: {
+                                                    connectorAllowed: false
+                                                },
+                                                pointStart: 0
+                                            }
+                                        },
+                                        series: [{
+                                            name: 'Pollutant:' + pollutantChecked,
+                                            data: ydata
+                                        }, {
+                                            name: 'Threshold, AQG Level (Day average reference value), ' + chartThreshold + unitStr,
+                                            data: ts_array
+                                        }], responsive: {
+                                            rules: [{
+                                                condition: {
+                                                    maxWidth: 200
+                                                },
+                                                chartOptions: {
+                                                    legend: {
+                                                        layout: 'horizontal',
+                                                        align: 'center',
+                                                        verticalAlign: 'bottom'
+                                                    }
+                                                }
+                                            }]
+                                        }
+                                    });
+
+
+
+                                },//success
+                                error: function (xhr, state, errorThrown) {
+                                    alert('请求pixel数据不存在');
+                                }
+
+                            })//ajax
+
+
+                        } else {
+                            // remove the previous legend
+                            if (legend) {
+                                map.removeControl(legend);
+                            }
+                            currentQueryedFeatureId = null;
+                            info.update();
+                            europaProvinceLayer.resetStyle();
+                            document.getElementById("province").value = feature.properties.COMUNE;
+                            e.target.setStyle({
+                                fillColor: "#f2ff00",
+                                weight: 0.8,
+                                opacity: 0.8,
+                                color: "#3388ff",
+                                fillOpacity: 0.5,
+                            });
+                        }
+
+                    });
+                    layer.on('dblclick', function (e) {
+                        map.fitBounds(e.target.getBounds());
+                    });
+                    layer.on('preclick', function (e) {
+                        // bindPopup
+                        var nuts_id = feature.properties.PRO_COM
+                        popLayer = layer.bindPopup("Municipality: " + feature.properties.COMUNE);//  + "Pollutant: " + pollutantChecked + "<br>" + "Value: " + concentration + unitStr);                        
+                        popLayer.openPopup(e.latlng);
+                        // document.getElementById("province").value = feature.properties.NUTS_NAME;
+                    });                    
+                },
+            }).addTo(map);
+
+
+
+            //分组1
+            var baseLayers = {
+                'OpenStreetMap': osm,
+                'Streets': streets,
+                'Satellite': satellite
+            };
+
+            //分组2
+            var overlays = {
+                'europaProvinceLayer': europaProvinceLayer
+
+            }
+
+            //添加control到map
+            layerControl = L.control.layers(baseLayers, overlays).addTo(map);
+            L.control.scale({ position: 'bottomright' }).addTo(map);
+            L.control.zoom({ position: 'topright' }).addTo(map);
+
+            //*********************************info panel*********************************//
+            info = L.control({
+                position: "topleft",
+                collapsed: true
+            });
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"                              
+                this.update();
+                return this._div;
+            };
+
+            // method that we will use to update the control based on feature properties passed
+            info.update = function (props, healthIndex, timeDate) {
+                this._div.innerHTML = '<div class="rows"><button class="summary" onclick="openPage(\'summary\')">Summary</button><button class="provinceChart" onclick="openPage(\'provinceChart\')">City Chart</button><button class="pixelLineChart" onclick="openPage(\'pixelLineChart\')">Pixel Chart</button><button class="warning" onclick="openPage(\'warning\')">Health Advice</button></div><div id="summary" class="page">' + '<h4>Summary</h4>' + (props ? '<b>Municipality: </b>' + props.COMUNE + '<br /><b>Date: </b>' + timeDate + '<br /><b>Pollutant: </b>' + pollutantChecked + '<br /><b>Concentration: </b>' + concentration + unitStr + '<br /><b>AQG Level: </b>' + threshold + unitStr + AQG_type + '<br /><b>The number of days more than AQG Level (' + chartThreshold + unitStr + ')</b>: ' + count : 'The query results will be displayed here') + '</div><div id="provinceChart" class="page"  style="display:none">' + '<h4>Municipality 的 time series</h4><br/>' + '请先查询某个省份' + '</div><div id="pixelLineChart" class="page" style="display:none">' + '<h4>pixel 的 time series</h4><br/>' + '请点击查询省份范围内的像素' + '</div><div id="warning" class="page" style="display:none">' + '<h4>Warning</h4>' + (healthIndex ? healthIndex : 'The health advice will be displayed here') + '</div>';
+            };
+
+
+            info.addTo(map);
+
+            // Disable dragging when user's cursor enters the element
+            info.getContainer().addEventListener('mouseover', function () {
+                map.dragging.disable();
+                map.scrollWheelZoom.disable();
+            });
+
+            // Re-enable dragging when user's cursor leaves the element
+            info.getContainer().addEventListener('mouseout', function () {
+                map.dragging.enable();
+                map.scrollWheelZoom.enable();
+            });
+            //***************************************************************************//
+
+
+        }
+
+        // add the concentration legend to the map
+        function addLegend() {
+
+            legend = L.control.Legend({
+                position: "bottomleft",
+                collapsed: false,
+                symbolWidth: 20,
+                opacity: 1,
+                column: 1,
+                title: "Concentration: " + pollutantChecked,
+                legends: [{
+                    label: '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + '>' + threshold + unitStr + AQG_type,
+                    type: "polygon",
+                    sides: 4,
+                    color: "#FF0000",
+                    fillColor: "#FF0000",
+                    weight: 2
+                }, {
+                    label: '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + '<=' + threshold + unitStr + AQG_type,
+                    type: "polygon",
+                    sides: 4,
+                    color: "#3EE871",
+                    fillColor: "#3EE871",
+                    weight: 2
+                }, {
+                    label: '\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + 'No Data',
+                    type: "polygon",
+                    sides: 4,
+                    color: "#737574",
+                    fillColor: "#737574",
+                    weight: 2
+                }]
+            }).addTo(map);
+        }
+
+        // set the polygon color according to the concentration
+        function setFeatureStyle(europaLayer, concentration, timeDate) {
+            for (var f in europaLayer._layers) {
+                var features = europaLayer._layers[f];
+                if (features.feature.properties.PRO_COM == nustId) {
+                    // console.log(features.feature.properties.PRO_COM);
+                    // var popLayer2 = features.bindPopup("Province hello world: " + features.feature.properties.NUTS_NAME + "<br>");
+                    // popLayer2.openPopup(zoomCenter);
+
+                    if (concentration > threshold) {
+                        features.setStyle({
+                            fillColor: "#ff0000",
+                            weight: 1,
+                            opacity: 1,
+                            color: "#3388ff",
+                            fillOpacity: 0.6,
+                        });
+                        var healthIndex = '<i class="bi-exclamation-triangle" style="font-size: 2rem; color: red;"></i><br />' + getRiskContent();
+                    }
+                    else if ((concentration >= 0) && (concentration <= threshold)) {
+                        features.setStyle({
+                            fillColor: "#00ff0d",
+                            weight: 1,
+                            opacity: 1,
+                            color: "#3388ff",
+                            fillOpacity: 0.6,
+                        })
+                        var healthIndex = 'No Warning';
+                    }
+                    else if (concentration < 0) {
+                        features.setStyle({
+                            fillColor: "#737574",
+                            weight: 2,
+                            opacity: 1,
+                            color: "#3388ff",
+                            fillOpacity: 1,
+                        })
+                    }
+                    info.update(features.feature.properties, healthIndex, timeDate);
+
+
+                }
+
+            }
+        }
+
+        // check
+        function checkSelectTimeScale() {
+            $('.timeYear').prop('checked', false);
+
+            var timeScaleObj = document.getElementsByName("timeScale");
+            for (var i = 0; i < timeScaleObj.length; i++) { //遍历Radio 
+                if (timeScaleObj[i].checked) {
+                    timeScaleValue = timeScaleObj[i].value;
+                    if ((timeScaleValue == 'timeScaleDay') || (timeScaleValue == 'timeScaleHour')) {
+                        $('#sdate').removeAttr('disabled');
+                        $('.timeYear').attr("disabled", "disabled");
+                    } else {
+                        $('#sdate').prop('value', '');
+                        $('.timeYear').removeAttr("disabled");
+                        $('#sdate').attr("disabled", "disabled");
+                    }
+
+                }
+            }
+
+        }
+
+        // check
+        function checkSelectedPollutant() {
+            $('#timeScale').prop('checked', false);
+
+            var pollutantObj = document.getElementsByName("pollutant");
+            for (var i = 0; i < pollutantObj.length; i++) { //遍历Radio 
+                if (pollutantObj[i].checked) {
+                    pollutantValue = pollutantObj[i].value;
+
+                    if ((pollutantValue == 'carbon_monoxide') || (pollutantValue == 'sulphur_dioxide')) {
+                        $('#timeScaleDay').removeAttr("disabled");
+                        $('#timeScaleDay').prop('checked', true);
+
+                        $('#timeScaleYear').attr("disabled", "disabled");
+                        $('#timeScaleHour').attr("disabled", "disabled");
+                        $('#timeScalePeakSeason').attr("disabled", "disabled");
+
+                    } else if (pollutantValue == 'ozone') {
+                        $('#timeScaleDay').attr("disabled", "disabled");
+                        $('#timeScaleYear').attr("disabled", "disabled");
+                        $('#timeScaleHour').removeAttr("disabled");
+                        $('#timeScalePeakSeason').removeAttr("disabled");
+
+                        $('#timeScaleHour').prop('checked', true);
+
+
+                    } else {
+                        $('#timeScaleDay').removeAttr("disabled");
+                        $('#timeScaleYear').removeAttr("disabled");
+                        $('#timeScaleHour').attr("disabled", "disabled");
+                        $('#timeScalePeakSeason').attr("disabled", "disabled");
+
+
+                        $('#timeScaleDay').prop('checked', true);
+                    }
+
+                    checkSelectTimeScale();
+                }
+            }
+
+        }
+
+
+        // "<ul><li>Example</li><li>Example<ul><li>Example</li><li>Example<ul><li>Example</li><li>Example</li></ul></li></ul></li><li>Example</li></ul>";
+
+        // get the risk content of each pollutant
+        function getRiskContent() {
+            var rc;
+            if (pollutantChecked == 'carbon_monoxide') {
+                rc = 'Carbon monoxide reduces the oxygen-carrying capacity of red blood cells, and its health effects depend on the length of time the body is exposed to carbon monoxide and the concentration of carbon monoxide inhaled. The average person experiences headaches, dizziness and fatigue when inhaling low levels of carbon monoxide. When inhaling high concentrations of carbon monoxide, it can cause blurred vision, loss of coordination, and even death.';
+            } else if (pollutantChecked == 'ozone') {
+                rc = 'Excessive ozone in the air can have a significant impact on human health. It can cause breathing problems, trigger asthma, reduce lung function and lead to lung disease.'
+            } else if (pollutantChecked == 'sulphur_dioxide') {
+                rc = 'SO2 can affect the respiratory system and lung function, and cause eye irritation. Inflammation of the airways causes coughing, mucus production, asthma, and chronic bronchitis, making people more prone to respiratory infections. Heart disease hospitalizations and mortality increased on days with higher sulfur dioxide levels. SO2 combines with water to produce sulfuric acid; the main component of acid rain that causes deforestation.';
+            } else if (pollutantChecked == 'nitrogen_dioxide') {
+                rc = 'Epidemiological studies have shown that bronchitis symptoms in children with asthma are associated with long-term exposure to nitrogen dioxide. At concentrations currently measured (or observed) in European and North American cities, reduced lung function growth was also associated with nitrogen dioxide.';
+            } else if (pollutantChecked == 'particulate_matter_10um') {
+                rc = 'PM10, usually refers to inhalable particles with a particle size of 10 μm or less. These substances have certain harm to the human body, such as damage to the alveoli and mucous membranes, causing chronic nasopharyngitis, aggravating asthma, causing chronic bronchitis, etc.';
+            } else if (pollutantChecked == 'particulate_matter_2.5um') {
+                rc = 'PM2.5 can penetrate the lung barrier and enter the blood system. Long-term exposure to particulate matter increases the risk of cardiovascular and respiratory diseases, as well as lung cancer.';
+            }
+            return rc
+        }
+
+        // function pixelLineChartLegend() {
+        //     var info2 = L.control({ position: "bottomright" });
+        //     info2.onAdd = function (map) {
+        //         var div2 = L.DomUtil.create('div', 'info2');
+        //         div2.innerHTML += '<span>Concentration Chart at Each Pixel</span>';
+        //         div2.innerHTML += '<div id="pixelLineChart"></div >';
+        //         return div2;
+        //     };
+        //     info2.addTo(map);
+        // }
+
+
+        // function testInfo3() {
+        //     var info3 = L.control({ position: "bottomright" });
+        //     info3.onAdd = function (map) {
+        //         var div3 = L.DomUtil.create('div', 'info3');
+        //         div3.innerHTML += '<div class="rows"><button class="my-button" onclick="openPage(\'provinceChart\')">Mean Data</button><button class="my-button" onclick="openPage(\'pixelLineChart\')">Hour Data</button><button class="my-button" onclick="openPage(\'example3\')">Test3</button><button class="my-button" onclick="openPage(\'example4\')">Test4</button></div><div id="provinceChart" class="page"></div> <div id="pixelLineChart" class="page" style="display:none"></div> <div id="example3" class="page" style="display:none"></div><div id="example4" class="page" style="display:none"></div>';
+        //         return div3;
+        //     };
+        //     info3.addTo(map);
+        // }
+
+
+        function displayProvinceChart() {
+            if ($('input:radio[name="timeYear"]:checked').val()) {
+                // var hour_array = Array(meaneachtimedata.length).fill(1).map((v, k) => k+1);
+                // var label_array = hour_array.map(function(item) { return Math.ceil(item/24) } )
+                // var label_array = hour_array.map(function(item) { return Math.ceil(item) } )
+                var label_array = Array(meaneachtimedata.length).fill(1).map((v, k) => k + 1);
+            } else {
+                var label_array = Array(meaneachtimedata.length).fill(1).map((v, k) => k);
+            }
+
+            var data_array = meaneachtimedata;
+            var ts_array = new Array(meaneachtimedata.length).fill(chartThreshold);
+
+            var myChart = Highcharts.chart('provinceChart', {
+                chart: {
+                    type: 'line',
+                    height: 500,
+                    width: 500
+                },
+                title: {
+                    text: 'Municipality: Concentration time series'
+                },
+                // subtitle: {
+                //     text: ''
+                // },
+                xAxis: {
+                    categories: label_array,
+                    title: {
+                        text: x_label_text
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Concentration (' + unitStr + ')'
+                    }
+                },
+                legend: {
+                    layout: 'horizontal',
+                    align: 'left',
+                    verticalAlign: 'top'
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            // 开启数据标签
+                            enabled: false
+                        },
+                        // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+                        enableMouseTracking: true
+                    },
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        pointStart: 0
+                    }
+                },
+                series: [{
+                    name: 'Pollutant: ' + pollutantChecked,
+                    data: data_array
+                }, {
+                    name: 'Threshold, AQG Level (Day average reference value), ' + chartThreshold + unitStr,
+                    data: ts_array
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 200
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+        }
+
+        function openPage(pageName) {
+            var p;
+            var x = document.getElementsByClassName("page");
+            for (p = 0; p < x.length; p++) {
+                x[p].style.display = "none";
+            }
+            document.getElementById(pageName).style.display = "block";
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

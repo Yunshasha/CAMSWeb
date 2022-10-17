@@ -1,0 +1,137 @@
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+      sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    height: 100%;
+    min-height: 100%;
+    margin: 0;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
+  #titleTD {
+    font-size: x-large;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .bg-blue { background-color: #33A6E7; }
+
+  /* #lmask {
+    display: block;
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.44);
+  }
+
+  #coverShow {
+    display: block;
+    position: fixed;
+    z-index: 9999;
+    top: 50%;
+    left: 50%;
+    border: 1px solid #127386;
+    width: 300px;
+    height: 100px;
+    margin-left: -150px;
+    margin-top: -150px;
+    background: #127386;
+  } */
+
+  #lmask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 15000;
+  }
+  
+  #lmask img {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    /* margin-top: -15px;
+    margin-left: -15px; */
+  }
+
+
+  .info {
+    /* padding: 6px 8px; */
+    width: 500px;
+    /* height: 100px; */
+    font: 14px/16px;
+    /* font-size: large; */
+    background: white;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    /* overflow: scroll; */
+}
+
+
+.info button{
+  margin-left: 2px;
+  background-color: none;
+  border-color: #33A6E7;
+  /* width:100px;
+  height:30px; */
+  font-size: larger;
+}
+
+.info button:hover{
+  background-color: rgb(51, 166, 231);
+  border-color: rgb(51, 166, 231);
+  /* width:100px;
+  height:30px; */
+}
+
+.warningContent{
+  font-size: 20px;
+}
+
+/* .info h4 {
+    margin: 0 0 5px;
+    color: #777;
+} */
+
+
+.info2 {
+  /* padding: 6px 8px; */
+  width: 500px;
+  height: 500px;
+  /* font: 5px/6px Arial, Helvetica, sans-serif; */
+  background: white;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 1px rgba(0,0,0,0.2);
+  border-radius: 1px;
+  /* overflow: scroll; */
+}
+.info2 span {
+  margin: 0 0 5px;
+  color: #000;
+  display:block;
+  text-align:center;
+}
+
+
+
+.info3 {
+  /* padding: 6px 8px; */
+  width: 300px;
+  height: 300px;
+  /* font: 5px/6px Arial, Helvetica, sans-serif; */
+  background: white;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 1px rgba(0,0,0,0.2);
+  border-radius: 1px;
+  /* overflow: scroll; */
+}
