@@ -94,6 +94,7 @@ def get_mean(ds_name, ds_time, ds_variable, ds_area,ds_bounds,ds_centroid):
                 rdata_values = rdata.pm2p5_conc.values
                 key_values = 'pm2p5_conc'
 
+
             # Below we calculate the mean values. For ozone, we don't really understand how to do with "8-hour maximum daily", so here we just seperate 24 hours into 3 parts, calculate the mean values of each part and select the maximum values among them and create a new dataarray contains these maximum mean values of ozone. We are not sure about this yet.
             if ds_variable == 'ozone':
                 H = []
@@ -138,6 +139,7 @@ def get_mean(ds_name, ds_time, ds_variable, ds_area,ds_bounds,ds_centroid):
             elif ds_variable == 'particulate_matter_2.5um':
                 rdata_values = rdata.pm2p5_conc.values
                 key_values = 'pm2p5_conc'
+
 
             # Below we calculate the mean values. For ozone, we don't really understand how to do with "8-hour maximum daily", so here we just seperate 24 hours into 3 parts, calculate the mean values of each part and select the maximum values among them and create a new dataarray contains these maximum mean values of ozone. We are not sure about this yet.
             if ds_variable == 'ozone':

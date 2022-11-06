@@ -85,14 +85,20 @@ def getDayData():
     unitStr, threshold, chartThreshold, AQG_type, x_label_text = getUnitStr(pollutants, 'day')
 
     data_list = {}
-    data_list['meandata'] = mean_province.tolist()
+
+    data_list['meandata'] = round(mean_province,2).tolist()
     data_list['unitStr'] = unitStr
     data_list['threshold'] = threshold
     data_list['chartThreshold'] = chartThreshold
     data_list['AQG_type'] = AQG_type
     data_list['x_label_text'] = x_label_text
     data_list['zoomCenter'] = zoomCenter
-    data_list['meaneachtimedata'] = mean_each_time_data_province.tolist()
+
+    mean_each_time_data_province = mean_each_time_data_province.tolist()  
+    data_list['meaneachtimedata'] = [float('{:.2f}'.format(i)) for i in mean_each_time_data_province]#mean_each_time_data_province.tolist()
+    
+    # data_list['meaneachtimedata'] = mean_each_time_data_province.tolist()
+    
     # data_list['count'] = np.count_nonzero(mean_each_time_data_province >= chartThreshold)
     # print(data_list)
 
@@ -167,15 +173,18 @@ def getYearData():
     #     mean_every_day = np.array(mean_every_day)
 
     data_list = {}
-    data_list['meandata'] = mean_province.tolist()
+    data_list['meandata'] = round(mean_province.tolist(),2)
     data_list['unitStr'] = unitStr
     data_list['threshold'] = threshold
     data_list['chartThreshold'] = chartThreshold
     data_list['AQG_type'] = AQG_type
     data_list['x_label_text'] = x_label_text
     data_list['zoomCenter'] = zoomCenter
-    data_list['meaneachtimedata'] = mean_each_time_data_province.tolist()
     data_list['count'] = np.count_nonzero(mean_each_time_data_province >= chartThreshold)
+
+    mean_each_time_data_province = mean_each_time_data_province.tolist()
+    data_list['meaneachtimedata'] = [float('{:.2f}'.format(i)) for i in mean_each_time_data_province]#.tolist()
+    
     # print(mySession.sessionRdata)
 
     return Response(json.dumps(data_list), mimetype='application/json')
@@ -236,7 +245,9 @@ def queryByPixel():
 
     data_list = {}
     # data_list['xdata'] = xdata.tolist()
-    data_list['ydata'] = ydata.tolist()
+    ydata = ydata.tolist()
+    data_list['ydata'] = [float('{:.2f}'.format(i)) for i in ydata]#ydata.tolist()
+    
 
     return Response(json.dumps(data_list), mimetype='application/json')
 
@@ -302,6 +313,7 @@ def getUnitStr(pollutants, time):
 
 def getProvinceBounds(province):
     code = province
+    # path_rg = 'data/Lombardy/lombardy_municipalities.shp' 
     path_rg = config.baseLayersPath
     gdf_rg = gpd.read_file(path_rg)
     gdf_rg.crs = "EPSG:4326"
