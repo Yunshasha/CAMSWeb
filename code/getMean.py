@@ -95,7 +95,7 @@ def get_mean(ds_name, ds_time, ds_variable, ds_area,ds_bounds,ds_centroid):
                 key_values = 'pm2p5_conc'
 
 
-            # Below we calculate the mean values. For ozone, we don't really understand how to do with "8-hour maximum daily", so here we just seperate 24 hours into 3 parts, calculate the mean values of each part and select the maximum values among them and create a new dataarray contains these maximum mean values of ozone. We are not sure about this yet.
+            # Below we calculate the mean values.
             if ds_variable == 'ozone':
                 H = []
                 for k in range(17):

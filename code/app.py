@@ -93,9 +93,9 @@ def getDayData():
     data_list['AQG_type'] = AQG_type
     data_list['x_label_text'] = x_label_text
     data_list['zoomCenter'] = zoomCenter
-
-    mean_each_time_data_province = mean_each_time_data_province.tolist()  
-    data_list['meaneachtimedata'] = [float('{:.2f}'.format(i)) for i in mean_each_time_data_province]#mean_each_time_data_province.tolist()
+    
+    mean_each_time_data_province = mean_each_time_data_province.tolist() 
+    data_list['meaneachtimedata'] = [round(i, 2) for i in mean_each_time_data_province]#[float('{:.2f}'.format(i)) for i in mean_each_time_data_province]
     
     # data_list['meaneachtimedata'] = mean_each_time_data_province.tolist()
     
@@ -217,7 +217,7 @@ def queryByPixel():
     try:
         NearGrid = sessionRdata.sel(
             latitude=lat_pixel, longitude=lon_pixel, method='nearest')
-    except:  # 这里执行只有一个网格的数据 不确定 待验证
+    except:  # 这里执行只有一个网格的数据 
         NearGrid = sessionRdata
 
     # xdata = np.float64(NearGrid.time.values/3600000000000)
@@ -229,16 +229,16 @@ def queryByPixel():
 
     
     if len(ydata) > 48: # 这个if是求year数据中的天均值; 大于48说明一定是年数据, 而大于24不一定, 因为臭氧的day数据是两天, 长度为48;
-        if sessionDsVariable == 'co_conc': # 如果是臭氧
-            aa = ydata
-        else:
-            mean_every_day = []
-            for k in range(int(len(ydata)/24)):
-                start_k = 24*k
-                end_k = 24*(k+1)
-                mean_every_day.append(np.mean(ydata[start_k:end_k]))
-            mean_every_day = np.array(mean_every_day)
-            ydata = mean_every_day
+        # if sessionDsVariable == 'ozone': # 如果是臭氧
+        #     aa = ydata
+        # else:
+        mean_every_day = []
+        for k in range(int(len(ydata)/24)):
+            start_k = 24*k
+            end_k = 24*(k+1)
+            mean_every_day.append(np.mean(ydata[start_k:end_k]))
+        mean_every_day = np.array(mean_every_day)
+        ydata = mean_every_day
     else: # 这里保证了day数据显示为1天的数据; 因为臭氧的是两天数据, 长度为48
         ydata = ydata[0:24]
 
