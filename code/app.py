@@ -95,7 +95,7 @@ def getDayData():
     data_list['zoomCenter'] = zoomCenter
     
     mean_each_time_data_province = mean_each_time_data_province.tolist() 
-    data_list['meaneachtimedata'] = [round(i, 2) for i in mean_each_time_data_province]#[float('{:.2f}'.format(i)) for i in mean_each_time_data_province]
+    data_list['meaneachtimedata'] = [float('{:.2f}'.format(i[0])) for i in mean_each_time_data_province]
     
     # data_list['meaneachtimedata'] = mean_each_time_data_province.tolist()
     
@@ -277,8 +277,8 @@ def getUnitStr(pollutants, time):
                 threshold = 45
                 chartThreshold = 45
             elif pollutants == 'ozone':
-                threshold = 100  # 还没写
-                chartThreshold = 100  # 还没写
+                threshold = 100  
+                chartThreshold = 100  
 
     elif time == 'year':
         AQG_type = ' (Annual average reference value)'
@@ -306,7 +306,7 @@ def getUnitStr(pollutants, time):
             elif pollutants == 'ozone':
                 # if is day dont have threshold
                 threshold = 60
-                chartThreshold = 100  # 还没写
+                chartThreshold = 100  
 
     return unitStr, threshold, chartThreshold, AQG_type, x_label_text
 
